@@ -1,18 +1,52 @@
-const express = require("express")
-const app = express()
+const express = require("express");
+const app = express();
 
-const user = [{
+const users = [{
     name:"Chandresh",
     cars: [{
         fixed: true
     }]
 }];
 
-app.get("/", function(req,res){
+app.use(express.json());
 
+app.get("/", function(req,res){
+    const chndrshCars = users[0].cars;
+    const numberOfCars = chndrshCars.length;
+    let numberOfFixedCars = 0;
+    for(let i = 0; i < chndrshCars.length; i++){
+        if(chndrshCars[i].fixed){
+            numberOfFixedCars = numberOfFixedCars + 1; 
+        }
+    }
+    const numberOfUnfixedCars = numberOfCars - numberOfFixedCars;
+    res.json({
+        numberOfCars, 
+        numberOfFixedCars,
+        numberOfUnfixedCars
+    })
 })
 
-app.listen(3000)
+app.post("/", function(req, res){
+    const isFixed = req.body.isFixed;
+    users[0].cars.push({
+        healthy: isFixed
+    })
+    res.json({
+        msg: "Pleasure doin business!!"
+    })
+})
+
+app.put("/", function(req,res){
+    for(let i = 0; i <= users[0].cars.length; i++){
+        users[0].cars[i].healthy = true;
+    }
+    res.json({
+        msg: "Fixed!!!"
+    })
+})
+
+app.listen(3000);
 
 
 /*
